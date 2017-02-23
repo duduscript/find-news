@@ -22,9 +22,11 @@ class Crawler(object):
             'Chrome/19.0.1084.46 Safari/536.5'),
             ('Mozilla/5.0 (Windows; Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46''Safari/536.5')
         )
+        self.url = "https://bbs.byr.cn"
         self.driver = webdriver.PhantomJS()
-        self.driver.get("https://bbs.byr.cn")
+        self.driver.get(self.url)
         self.driver.maximize_window()
+        self.s = None
         time.sleep(3)
         print('--------get--------')
     def login(self,user):
@@ -38,8 +40,15 @@ class Crawler(object):
         soup = BeautifulSoup(self.driver.page_source,'lxml')
         topten_ul = soup.find('li',id='topten').ul
         for li in topten_ul.find_all('li'):
-            print(li['title'],li.a['href'])
-        
+            print(self.url+li.a['href'])
+            r = self.s.get(self.url+li.a['href'])
+            #print(r.text)
+    def changetorequests(self):
+        cookies = self.driver.get_cookies()
+        self.s = requests.Session()
+        for cookie in cookies:
+            self.s.cookies.set(cookie['name'],cookie['value'])
+        print(self.s.cookies)
         
 
 
@@ -49,4 +58,6 @@ if __name__ == '__main__':
     user = User(username,password)
     crawler = Crawler()
     crawler.login(user)
+    #crawler.get_top_ten()
+    crawler.changetorequests()
     crawler.get_top_ten()
