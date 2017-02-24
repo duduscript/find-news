@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_script import Manager
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
@@ -9,11 +9,10 @@ app = Flask(__name__)
 manager = Manager(app)
 bootstrap = Bootstrap(app)
 
-class SearchForm(Form):
-    sentence = StringField()
-
-@app.route('/')
+@app.route('/', methods=['GET','POST'])
 def index():
+    if request.method == "POST":
+        print(request.form['search'])
     return render_template('index.html')
 
 @app.route('/about')
