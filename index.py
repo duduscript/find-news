@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request
-from flask_script import Manager
+from flask_script import Manager,Server
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
-from wtforms import StringField
 
 app = Flask(__name__)
 
+server = Server(host='0.0.0.0',port=5000)
 manager = Manager(app)
+manager.add_command("runserver",Server())
 bootstrap = Bootstrap(app)
 
 @app.route('/', methods=['GET','POST'])
